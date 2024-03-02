@@ -20,24 +20,62 @@ type ColourValues struct {
 }
 
 func main() {
-	// bytes := readInputFromFile("./example_input_one.txt")
-	bytes := readInputFromFile("puzzle_input.txt")
+	bytes := readInputFromFile("./example_input_one.txt")
+	// bytes := readInputFromFile("puzzle_input.txt")
 	input := byteToStringArray(bytes)
 	sum := 0
+	pow := 0
 	maxValues := ColourValues{13, 14, 12}
 
 	startre := regexp.MustCompile(`[:]`)
 
 	for i, in := range input {
 		idx := startre.FindStringIndex(in)
-		//fmt.Println(in[idx[1]+1:])
 		// remove Game #: from the input before passing
 		if isLineValid(in[idx[1]+1:], maxValues) {
 			sum += i + 1
 		}
+
+		posGame := getPossibleGame(in[idx[1]+1:])
+		pow += posGame.BlueValue * posGame.GreenValue * posGame.RedValue
 	}
 
 	fmt.Printf("SUM: %d\n", sum)
+	fmt.Printf("POW: %d\n", pow)
+}
+
+func getPossibleGame(input string) ColourValues {
+	n := numRe.FindAllString(input, -1)
+	w := wordRe.FindAllString(input, -1)
+	res := ColourValues{0, 0, 0}
+
+	for i := range n {
+		v, err := strconv.Atoi(n[i])
+		if err != nil {
+			fmt.Println(err)
+			continue
+		}
+
+		switch w[i] {
+		case "green":
+			if v > res.GreenValue {
+				res.GreenValue = v
+			}
+		case "blue":
+			if v > res.BlueValue {
+				res.BlueValue = v
+			}
+		case "red":
+			if v > res.RedValue {
+				res.RedValue = v
+			}
+		default:
+			fmt.Printf("ERROR: invalid input line, %s\n", input)
+		}
+
+	}
+
+	return res
 }
 
 func isLineValid(input string, maxValues ColourValues) bool {
