@@ -32,7 +32,7 @@ func main() {
 		idx := startre.FindStringIndex(in)
 		//fmt.Println(in[idx[1]+1:])
 		// remove Game #: from the input before passing
-		if parseInputLine(in[idx[1]+1:], maxValues) {
+		if isLineValid(in[idx[1]+1:], maxValues) {
 			sum += i + 1
 		}
 	}
@@ -40,7 +40,7 @@ func main() {
 	fmt.Printf("SUM: %d\n", sum)
 }
 
-func parseInputLine(input string, maxValues ColourValues) bool {
+func isLineValid(input string, maxValues ColourValues) bool {
 	n := numRe.FindAllString(input, -1)
 	w := wordRe.FindAllString(input, -1)
 
@@ -53,17 +53,20 @@ func parseInputLine(input string, maxValues ColourValues) bool {
 
 		switch w[i] {
 		case "green":
-			if v >= maxValues.GreenValue {
+			if v > maxValues.GreenValue {
 				return false
 			}
 		case "blue":
-			if v >= maxValues.BlueValue {
+			if v > maxValues.BlueValue {
 				return false
 			}
 		case "red":
-			if v >= maxValues.RedValue {
+			if v > maxValues.RedValue {
 				return false
 			}
+		default:
+			fmt.Printf("ERROR: invalid input line, %s\n", input)
+			return false
 		}
 	}
 
