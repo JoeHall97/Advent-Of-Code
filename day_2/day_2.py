@@ -25,7 +25,7 @@ def puzzle_one():
         print(sum)
 
 def puzzle_two():
-    # ended up getting this solution from the yt video:
+    # ended up getting this solution from this yt video:
     # https://www.youtube.com/watch?v=DJhicnmb0ZA
     # pretty simple way to solve the problem.
     with open('puzzle_input.txt') as f:
